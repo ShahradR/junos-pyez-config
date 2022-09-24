@@ -1,0 +1,66 @@
+---
+default_stages: [commit]
+exclude: vale/styles/*
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.1.0
+    hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-case-conflict
+      - id: detect-private-key
+      - id: mixed-line-ending
+        args: [--fix=no]
+      - id: check-added-large-files
+        args: [--maxkb=10240]
+
+  - repo: https://github.com/tcort/markdown-link-check
+    rev: v3.10.2
+    hooks:
+      - id: markdown-link-check
+
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.5.1
+    hooks:
+      - id: markdownlint-cli2
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.2.1
+    hooks:
+      - id: codespell
+        stages: [commit]
+
+  - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
+    rev: v7.0.1
+    hooks:
+      - id: commitlint
+        stages: [commit-msg]
+        additional_dependencies: ["@commitlint/config-conventional"]
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v2.5.1
+    hooks:
+      - id: prettier
+        name: Prettier
+
+  - repo: local
+    hooks:
+      - id: alex
+        name: alex
+        entry: alex
+        language: node
+        types: [text]
+        additional_dependencies: [alex]
+        exclude: ^CODE_OF_CONDUCT.md$
+        stages: [commit]
+      - id: dockerfile-provides-entrypoint
+        name: Vale
+        language: docker_image
+        entry: jdkato/vale:latest
+
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.3.0
+    hooks:
+      - name: Scan for secrets
+        id: detect-secrets

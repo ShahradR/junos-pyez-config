@@ -11,6 +11,20 @@ jobs:
       - uses: actions/setup-python@v4
       - uses: pre-commit/action@v3.0.0
 
+  tests:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - run: pip install pyOpenSSL --upgrade
+      - run: pip install -r requirements.txt
+      - run: pip install coverage
+      - run: coverage run -m pytest
+      - run: coverage report
+
   vale:
     name: Run Vale
     runs-on: ubuntu-latest
@@ -25,8 +39,8 @@ jobs:
   release:
     name: Create release
     runs-on: ubuntu-latest
-    needs: [pre-commit, vale]
-    if: ${{ needs.pre-commit.result == 'success' }}
+    needs: [pre-commit, tests, vale]
+    if: ${{ needs.pre-commit.result == 'success' && needs.tests.result == 'success' && needs.vale.result == 'success'}}
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:

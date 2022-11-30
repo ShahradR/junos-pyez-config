@@ -42,3 +42,31 @@ opentelemetry-instrument \
     --metrics_exporter console \
     python /workspaces/junos-pyez-config/src/junos-pyez-config-shahradr/fetch_vlan_config.py
 ```
+
+### OpenTelemetry Connector configuration
+
+```yaml
+receivers:
+  otlp:
+    protocols:
+      grpc:
+exporters:
+  logging:
+    loglevel: debug
+  otlp:
+    endpoint: tempo-us-central1.grafana.net:443
+    headers:
+      authorization: Basic <base64 data>
+processors:
+  batch:
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [otlp]
+      processors: [batch]
+    metrics:
+      receivers: [otlp]
+      exporters: [logging]
+      processors: [batch]
+```

@@ -1,0 +1,12 @@
+version: "3.7"
+x-environment: &default-environment
+  VARIANT: bullseye
+services:
+  devcontainer:
+    build: ./
+    environment:
+      - VARIANT=bullseye
+    volumes:
+      - ..:/workspace
+    user: vscode
+    command: sleep infinity

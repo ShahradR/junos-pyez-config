@@ -2,13 +2,9 @@
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.202.3/containers/debian
 {
   "name": "Debian",
-  "runArgs": ["--init"],
-  "build": {
-    "dockerfile": "Dockerfile",
-    // Update 'VARIANT' to pick an Debian version: bullseye, buster, stretch
-    // Use bullseye or stretch on local arm64/Apple Silicon.
-    "args": { "VARIANT": "bullseye" }
-  },
+  "dockerComposeFile": "docker-compose.yaml",
+  "service": "devcontainer",
+  "workspaceFolder": "/workspace",
 
   // Set *default* container specific settings.json values on container create.
   "settings": {},

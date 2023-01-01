@@ -16,8 +16,10 @@
     "TLahmann.alex-linter"
   ],
 
+  "runServices": ["otel-collector", "jaeger"],
+
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  // "forwardPorts": [],
+  "forwardPorts": [16686],
 
   // Uncomment to use the Docker CLI from inside the container. See https://aka.ms/vscode-remote/samples/docker-from-docker.
   // "mounts": [ "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind" ],

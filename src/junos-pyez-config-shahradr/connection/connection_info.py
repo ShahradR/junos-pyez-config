@@ -12,10 +12,12 @@ username, and password used to connect to the appliance.
 
 from __future__ import annotations
 from abc import ABC, abstractmethod
+from opentelemetry import trace
 import json
 import os
 import boto3
 
+tracer = trace.get_tracer("junos_pyez_config")
 
 class AbstractConnectionInfoManager(ABC):
     """
@@ -34,6 +36,7 @@ class AbstractConnectionInfoManager(ABC):
         This method is used to create a concrete implementation of the ConfigStrategy class.
         """
 
+    @tracer.start_as_current_span("AbstractConnectionInfoManager.get_configuration")
     def get_configuration(self) -> NetworkApplianceConnectionInfo:
         """
         This method is used to retrieve the credentials from the concrete implementation of the
@@ -50,6 +53,7 @@ class ConnectionInfoManager(AbstractConnectionInfoManager):
     configuration should be retrieved.
     """
 
+    @tracer.start_as_current_span("ConnectionInfoManager.__init__")
     def __init__(self):
         """
         This method is used to instantiate the ConnectionInfoManager class. It sets the cloud
@@ -72,6 +76,7 @@ class ConnectionInfoManager(AbstractConnectionInfoManager):
         if self.cloud_provider not in ["AWS", "AZURE"]:
             raise IncorrectCloudProviderEnvVarError(self.cloud_provider)
 
+    @tracer.start_as_current_span("ConnectionInfoManager.config_manager_factory")
     def config_manager_factory(self):
         """
         This method is used to create a ConfigStrategy based on the cloud provider used to retrieve
@@ -91,6 +96,7 @@ class NetworkApplianceConnectionInfo:
     The NetworkApplianceConnectionInfo class stores credentials for a given network appliance.
     """
 
+    @tracer.start_as_current_span("NetworkApplianceConnectionInfo.__init__")
     def __init__(self, username, password, hostname):
         """
         The constructor for the NetworkApplianceConnectionInfo class.
@@ -122,6 +128,7 @@ class AWSConfigStrategy(ConfigStrategy):
     The AWSSecretStrategy class is used to retrieve the credentials from AWS Secrets Manager.
     """
 
+    @tracer.start_as_current_span("AWSConfigStrategy.__init__")
     def __init__(self, config_name):
         """
         The constructor for the AWSSecretStrategy class.
@@ -132,6 +139,7 @@ class AWSConfigStrategy(ConfigStrategy):
             service_name="secretsmanager", region_name="us-east-1"
         )
 
+    @tracer.start_as_current_span("AWSConfigStrategy.get_secret")
     def get_secret(self) -> NetworkApplianceConnectionInfo:
         """
         The get_secret method is used to retrieve the credentials from AWS Secrets Manager.

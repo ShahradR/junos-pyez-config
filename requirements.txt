@@ -6,7 +6,7 @@ pytest-mock~=3.10.0
 moto~=4.0.7
 opentelemetry-api~=1.14.0
 opentelemetry-sdk~=1.14.0
-opentelemetry-instrumentation==0.35b0
+opentelemetry-instrumentation==0.41b0
 opentelemetry-exporter-otlp~=1.14.0
 opentelemetry-exporter-otlp-proto-grpc~=1.14.0
 opentelemetry-exporter-otlp-proto-http~=1.14.0
